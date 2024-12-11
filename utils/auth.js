@@ -1,4 +1,4 @@
-const dbClient = require("./db");
+const dbClient = require('./db');
 
 class UserAuth {
   static async getUserFromToken(token) {
