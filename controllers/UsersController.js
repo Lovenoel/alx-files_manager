@@ -1,36 +1,37 @@
-import dbClient from "../utils/db";
-import crypto from "crypto";
+import crypto from 'crypto';
+import dbClient from '../utils/db';
 
 class UsersController {
   static async postNew(req, res) {
     const { email, password } = req.body;
 
-    if (!email) return res.status(400).json({ error: "Missing email" });
-    if (!password) return res.status(400).json({ error: "Missing password" });
+    if (!email) return res.status(400).json({ error: 'Missing email' });
+    if (!password) return res.status(400).json({ error: 'Missing password' });
 
-    const userExists = await dbClient.db.collection("users").findOne({ email });
-    if (userExists) return res.status(400).json({ error: "Already exist" });
+    const userExists = await dbClient.db.collection('users').findOne({ email });
+    if (userExists) return res.status(400).json({ error: 'Already exist' });
 
     const hashedPassword = crypto
-      .createHash("sha1")
+      .createHash('sha1')
       .update(password)
-      .digest("hex");
+      .digest('hex');
     const result = await dbClient.db
-      .collection("users")
+      .collection('users')
       .insertOne({ email, password: hashedPassword });
 
     res.status(201).json({ id: result.insertedId, email });
   }
+
   static async getMe(req, res) {
-    const token = req.headers["x-token"];
+    const token = req.headers['x-token'];
     const userId = await redisClient.get(`auth_${token}`);
 
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
     const user = await dbClient.db
-      .collection("users")
+      .collection('users')
       .findOne({ _id: new ObjectId(userId) });
-    if (!user) return res.status(401).json({ error: "Unauthorized" });
+    if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
     res.status(200).json({ id: user._id, email: user.email });
   }
