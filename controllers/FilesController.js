@@ -8,7 +8,6 @@ const mime = require('mime-types');
 const fileQueue = require('../worker');
 
 const FOLDER_PATH = process.env.FOLDER_PATH || '/tmp/files_manager';
-const FOLDER_PATH = process.env.FOLDER_PATH || '/tmp/files_manager';
 
 class FilesController {
   static async postUpload(req, res) {
