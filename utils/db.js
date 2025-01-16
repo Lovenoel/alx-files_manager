@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import redisClient from './redis';
 
 class DBClient {
   constructor() {
@@ -24,6 +25,23 @@ class DBClient {
 
   async nbFiles() {
     return this.db.collection('files').countDocuments();
+  }
+
+  async addUser(email, password) {
+    return this.db.collection('users').insertOne({ email, password});
+  }
+
+  async findUserByEmail(email) {
+    return this.db.collection('users').findOne({ email })
+  }
+
+  async findUserByToken(token) {
+    const userId = await redisClient.get(`auth_${token}`);
+    return this.db.collection('users').findOne({ _id: userId});
+  }
+
+  async addFile(file) {
+    return this.db.collection('files').insertOne(file)
   }
 }
 

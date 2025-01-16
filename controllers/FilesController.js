@@ -1,13 +1,13 @@
-const { ObjectId } = require("mongodb");
-const fs = require("fs");
-const path = require("path");
-const { v4: uuidv4 } = require("uuid");
-const dbClient = require("../utils/db"); // Assume MongoDB utils file
-const userAuth = require("../utils/auth"); // Token-based user authentication
-const mime = require("mime-types");
-const fileQueue = require("../worker");
+const { ObjectId } = require('mongodb');
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const dbClient = require('../utils/db'); // Assume MongoDB utils file
+const userAuth = require('../utils/auth'); // Token-based user authentication
+const mime = require('mime-types');
+const fileQueue = require('../worker');
 
-const FOLDER_PATH = process.env.FOLDER_PATH || "/tmp/files_manager";
+const FOLDER_PATH = process.env.FOLDER_PATH || '/tmp/files_manager';
 
 class FilesController {
   static async postUpload(req, res) {
