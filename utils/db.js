@@ -1,5 +1,5 @@
-import { MongoClient } from 'mongodb';
-import redisClient from './redis';
+const { MongoClient } = require('mongodb');
+const redisClient = require( './redis');
 
 class DBClient {
   constructor() {
@@ -46,4 +46,4 @@ class DBClient {
 }
 
 const dbClient = new DBClient();
-export default dbClient;
+module.exports = dbClient;
