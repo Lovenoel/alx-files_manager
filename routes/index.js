@@ -20,8 +20,8 @@ router.get('/disconnect', AuthController.getDisconnect);
 
 // File Upload routes
 router.post('/files', FilesController.postUpload);
-router.post("/files", FilesController.postUpload);
-//router.get("/files/:id", FilesController.getShow);
-//router.get("/files", FilesController.getIndex);
+router.post('/files', FilesController.postUpload);
+router.get('/files/:id', FilesController.getShow);
+router.get('/files', FilesController.getIndex);
 
 module.exports = router;

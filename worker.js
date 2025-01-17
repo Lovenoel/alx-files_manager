@@ -28,7 +28,7 @@ fileQueue.process(async (job) => {
   try {
     // Generate thumbnails
     for (const size of sizes) {
-      const thumbnail = await imageThumbnail(filePath, { width: size });
+      const thumbnail = imageThumbnail(filePath, { width: size });
       const thumbnailPath = `${filePath}_${size}`;
       fs.writeFileSync(thumbnailPath, thumbnail);
       console.log(`Thumbnail created: ${thumbnailPath}`);
