@@ -1,5 +1,5 @@
-const dbClient = require('../utils/db');
 const crypto = require('crypto');
+const dbClient = require('../utils/db');
 
 class UsersController {
   static async postNew(req, res) {
@@ -14,9 +14,9 @@ class UsersController {
     const hashedPassword = crypto
       .createHash('sha1')
       .update(password)
-      .digest("hex");
+      .digest('hex');
     const newUser = await dbClient.db
-      .collection("users")
+      .collection('users')
       .insertOne({ email, password: hashedPassword });
 
     res.status(201).json({ id: newUser.insertedId, email });

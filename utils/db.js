@@ -1,16 +1,15 @@
 const { MongoClient } = require('mongodb');
-const redisClient = require( './redis');
+const redisClient = require('./redis');
 
 class DBClient {
   constructor() {
     const host = process.env.DB_HOST || 'localhost';
     const port = process.env.DB_PORT || 27017;
     const database = process.env.DB_DATABASE || 'files_manager';
-
     this.client = new MongoClient(`mongodb://${host}:${port}`, {
       useUnifiedTopology: true,
     });
-    this.client.connect().catch(console.error);
+    this.client.connect().catch((error) => console.error(`MongoDB Client Error: ${error}`));
 
     this.db = this.client.db(database);
   }
@@ -28,20 +27,20 @@ class DBClient {
   }
 
   async addUser(email, password) {
-    return this.db.collection('users').insertOne({ email, password});
+    return this.db.collection('users').insertOne({ email, password });
   }
 
   async findUserByEmail(email) {
-    return this.db.collection('users').findOne({ email })
+    return this.db.collection('users').findOne({ email });
   }
 
   async findUserByToken(token) {
     const userId = await redisClient.get(`auth_${token}`);
-    return this.db.collection('users').findOne({ _id: userId});
+    return this.db.collection('users').findOne({ _id: userId });
   }
 
   async addFile(file) {
-    return this.db.collection('files').insertOne(file)
+    return this.db.collection('files').insertOne(file);
   }
 }
 

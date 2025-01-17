@@ -1,30 +1,40 @@
-const Queue = require('bull');
-const dbClient = require('./utils/db');
+const Bull = require('bull');
 const imageThumbnail = require('image-thumbnail');
 const fs = require('fs');
+const dbClient = require('./utils/db');
 
-const fileQueue = new Queue('fileQueue');
+// Create Bull queue
+const fileQueue = new Bull('fileQueue');
 
-fileQueue.process(async (job, done) => {
+// Process fileQueue
+fileQueue.process(async (job) => {
+  const { fileId, userId } = job.data;
+
+  // Validate inputs
+  if (!fileId) throw new Error('Missing fileId');
+  if (!userId) throw new Error('Missing userId');
+
+  // Fetch file from database
+  const file = await dbClient.findFileByIdAndUser(fileId, userId);
+  if (!file) throw new Error('File not found');
+  if (file.type !== 'image') {
+    console.log('Not an image. Skipping...');
+    return;
+  }
+
+  const filePath = file.localPath;
+  const sizes = [500, 250, 100];
+
   try {
-    const { fileId, userId } = job.data;
-
-    if (!fileId) throw new Error('Missing fileId');
-    if (!userId) throw new Error('Missing userId');
-
-    const file = await dbClient.getFileById(fileId);
-    if (!file || file.userId !== userId) throw new Error('File not found');
-
-    const sizes = [500, 250, 100];
+    // Generate thumbnails
     for (const size of sizes) {
-      const thumbnail = await imageThumbnail(file.localPath, { width: size });
-      const thumbnailPath = `${file.localPath}_${size}`;
+      const thumbnail = await imageThumbnail(filePath, { width: size });
+      const thumbnailPath = `${filePath}_${size}`;
       fs.writeFileSync(thumbnailPath, thumbnail);
+      console.log(`Thumbnail created: ${thumbnailPath}`);
     }
-
-    done();
   } catch (error) {
-    done(error);
+    console.error(`Error generating thumbnails: ${error.message}`);
   }
 });
 

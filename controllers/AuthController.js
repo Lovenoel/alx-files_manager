@@ -1,7 +1,7 @@
+const sha1 = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 const redisClient = require('../utils/redis');
 const dbClient = require('../utils/db');
-const crypto = require('crypto');
-const { v4: uuidv4 } = require('uuid');
 
 class AuthController {
   static async getConnect(req, res) {
