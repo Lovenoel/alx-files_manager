@@ -1,5 +1,6 @@
 const sha1 = require('sha1');
 const dbClient = require('../utils/db');
+const redisClient = require('../utils/redis');
 
 class UsersController {
   /**
@@ -43,6 +44,7 @@ class UsersController {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
   /**
    * GET /users/me
    * Retrieves the user associated with the token
